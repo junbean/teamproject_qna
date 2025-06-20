@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>문의 페이지</title>
+</head>
+<body>
+	<h1>문의 페이지</h1>
+	<hr>
+
+	<form action="/qnaProc" method="post">
+		<table border="1">
+			<thead>
+				<tr>
+					<th>제목</th>
+					<th>내용</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input type="text" name="title"></td>
+					<td><input type="text" name="content"></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="submit" value="제출">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</body>
+</html>
