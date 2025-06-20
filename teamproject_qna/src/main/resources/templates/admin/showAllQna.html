@@ -3,10 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+	<style>
+	    table {
+	      width: 80%;
+	      border-collapse: collapse; /* 테두리 겹침 제거 */
+	      margin: 20px 20px 20px 0;
+	    }
+	
+	    th, td {
+	      border: 1px solid #333;
+	      padding: 12px;
+	      text-align: center;
+	    }
+	
+	    th {
+	      background-color: #f2f2f2;
+	    }
+	
+	    tr:hover {
+	      background-color: #f9f9f9;
+	    }
+	
+	    caption {
+	      caption-side: top;
+	      font-weight: bold;
+	      font-size: 1.2em;
+	      margin-bottom: 10px;
+	    }
+	  </style>
 </head>
 <body>
+	<div th:replace="fragments/menu :: sidebar"></div>
+	
+	 <div style="margin-left: 220px; padding: 20px;">
+       
+   
 	<h1>Show All Qna Page</h1>
 	<hr>
+	
 	
 	<table border = "1">
 		<thead>
@@ -24,9 +58,15 @@
 				<td th:text="${b.title}"></td>
 				<td th:text="${b.writer.username}"></td>
 				<td th:text="${b.category}"></td>
-				<td th:text="${b.isAnswered}"></td>
+				<td>
+			    	<span th:text="${b.isAnswered}"></span>
+			    	<form th:action="@{/admin/showDetailQna/{title}(title=${b.title})}" method="get" th:if="${b.isAnswered == 'N'}" style="margin-top: 5px;">
+			        	<button type="submit">답변하기</button>
+			    	</form>
+			    </td>
 			</tr>
 		</tbody>
 	</table>
+	 </div>
 </body>
 </html>

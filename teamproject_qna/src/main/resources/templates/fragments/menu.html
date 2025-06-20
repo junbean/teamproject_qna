@@ -1,0 +1,32 @@
+<!-- 이 파일은 fragment 전용으로 구성되어야 함 -->
+<div th:fragment="sidebar">
+    <style>
+        #menuArea {
+            width: 200px;
+            height: 100vh;
+            background-color: #f0f0f0;
+            padding: 20px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        #menuArea a {
+            display: block;
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        #menuArea a:hover {
+            color: #007BFF;
+        }
+    </style>
+
+    <div id="menuArea">
+        <a href="/admin/showAllQna">전체 문의내역 보기</a>
+        <a href="/admin/showMyQna">나의 문의내역 보기</a>
+    </div>
+</div>
