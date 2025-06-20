@@ -119,6 +119,40 @@ bid - 외래키
 
 만약 여력이 된다면
 로그인 할 떄 패스워드를 암호화
+사용자 인가 인증을 jwt로 구현
 
 ```
-사용자 인가 인증을 jwt로 구현
+
+
+## 📊 핵심 테이블 (3개만)
+
+### 1. 회원 테이블 (Member) - 사용자 + 매니저 통합
+| 컬럼명 | 데이터 타입 | 제약조건 | 설명 |
+|--------|------------|----------|------|
+| id | BIGINT | PK, AUTO_INCREMENT | 회원 고유 ID |
+| username | VARCHAR(50) | UNIQUE, NOT NULL | 로그인 ID |
+| password | VARCHAR(255) | NOT NULL | BCrypt 암호화 비밀번호 |
+| name | VARCHAR(100) | NOT NULL | 이름 |
+| role | VARCHAR(20) | NOT NULL | 'USER' 또는 'MANAGER' |
+| job | VARCHAR(20) | | 매니저 담당업무 ('예금'/'대출'/'카드') |
+
+**비즈니스 규칙:**
+- `role = 'USER'` → `job = NULL`
+- `role = 'MANAGER'` → `job` 필수
+
+### 2. 문의 테이블 (Board)
+| 컬럼명 | 데이터 타입 | 제약조건 | 설명 |
+|--------|------------|----------|------|
+| id | BIGINT | PK, AUTO_INCREMENT | 문의 고유 ID |
+| title | VARCHAR(200) | NOT NULL | 문의 제목 |
+| content | TEXT | NOT NULL | 문의 내용 |
+| writer | BIGINT | FK, NOT NULL | 작성자 ID (Member.id) |
+| category | VARCHAR(20) | NOT NULL | '예금'/'대출'/'카드' |
+
+### 3. 답변 테이블 (Answer)
+| 컬럼명 | 데이터 타입 | 제약조건 | 설명 |
+|--------|------------|----------|------|
+| id | BIGINT | PK, AUTO_INCREMENT | 답변 고유 ID |
+| content | TEXT | NOT NULL | 답변 내용 |
+| writer | BIGINT | FK, NOT NULL | 매니저 ID (Member.id) |
+| board_id | BIGINT | FK, NOT NULL | 문의 ID (Board.id) |
