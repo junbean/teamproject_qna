@@ -32,8 +32,7 @@ public class AuthService {
     // 로그인
     public LoginResponseDTO login(LoginRequestDTO loginRequest) {
     	// 1. 사용자 조회
-        Member member = memberRepository.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
+        Member member = memberRepository.findByUsername(loginRequest.getUsername());
         
         // 2. 비밀번호 검증
         if (!passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
