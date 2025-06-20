@@ -35,7 +35,7 @@ public class AdminController {
 	private Conversion conversion;
 	@GetMapping("/")
 	public String root() {
-		return "admin/index";
+		return "fragments/index";
 	}
 	
 	@GetMapping("/showAllQna")
