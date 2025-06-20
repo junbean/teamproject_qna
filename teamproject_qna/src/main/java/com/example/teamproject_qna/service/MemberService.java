@@ -13,17 +13,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder; 
     
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, BCryptPasswordEncoder passwordEncoder) {
     	this.memberRepository = memberRepository;
-    	this.passwordEncoder = new BCryptPasswordEncoder();
+        this.passwordEncoder = passwordEncoder; 
     }
     
- // 회원가입
+    // 회원가입
     public void register(RegisterRequestDTO request) {
         // 1. 중복 사용자명 체크
-        if (memberRepository.existByUsername(request.getUsername())) {
+        if (memberRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("이미 존재하는 사용자명입니다.");
         }
         
@@ -45,8 +45,8 @@ public class MemberService {
         return passwordEncoder.encode(password);
     }
     
- // 사용자명 중복 체크
+    // 사용자명 중복 체크
     public boolean isUsernameExists(String username) {
-        return memberRepository.existByUsername(username);
+        return memberRepository.existsByUsername(username);
     }
 }

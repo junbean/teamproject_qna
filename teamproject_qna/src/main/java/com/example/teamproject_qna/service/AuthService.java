@@ -22,10 +22,10 @@ public class AuthService {
     private final JWTUtil jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder;
     
-    public AuthService(MemberRepository memberRepository, JWTUtil jwtUtil) {
+    public AuthService(MemberRepository memberRepository, JWTUtil jwtUtil, BCryptPasswordEncoder passwordEncoder) {
     	this.memberRepository = memberRepository;
     	this.jwtUtil = jwtUtil;
-    	this.passwordEncoder = new BCryptPasswordEncoder();
+        this.passwordEncoder = passwordEncoder; 
     }
     
 

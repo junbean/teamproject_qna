@@ -9,8 +9,8 @@ import com.example.teamproject_qna.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findByUsername(String username);
-	
-	boolean existByUsername(String username);
+
+	boolean existsByUsername(String username);
 	
 	Optional<Member> findByRoleAndJob(String role, String job);
 }

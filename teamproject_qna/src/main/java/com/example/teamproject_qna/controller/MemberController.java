@@ -38,7 +38,7 @@ public class MemberController {
     
     // 사용자명 중복 체크
     @GetMapping("/check-username")
-    public ResponseEntity<?> checkUsername(@RequestParam String username) {
+    public ResponseEntity<?> checkUsername(@RequestParam("username") String username) {
         try {
             boolean exists = memberService.isUsernameExists(username);
             if (exists) {
