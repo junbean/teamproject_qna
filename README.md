@@ -236,3 +236,19 @@ INSERT INTO board VALUES (1, '예금 문의', '예금 상품 궁금합니다', 1
 INSERT INTO answer VALUES (1, '예금 상품은...', 2, 1);
 ```
 
+
+```
+윤준빈
+	- jwt 구현 (refresh, access)
+	- filter 구현
+	- access 토큰 재발급
+	- 로그인
+	- 회원가입
+김법진
+	- 매니저 페이지
+	- 매니저 상세 페이지
+이대영
+	- 문의 페이지
+	- 마이페이지
+	- 상세 페이지
+```
