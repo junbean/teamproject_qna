@@ -9,14 +9,13 @@
     <h1>문의 상세 보기</h1>
 
 	<p><strong>글번호:</strong> <span th:text="${board.bid}"></span></p>
-	<p><strong>제목:</strong> <span th:text="${board.title}"></span></p>
 	<p><strong>카테고리:</strong> <span th:text="${board.category}"></span></p>
+	<p><strong>제목:</strong> <span th:text="${board.title}"></span></p>
 	<p><strong>내용:</strong> <span th:text="${board.content}"></span></p>
 	<p><strong>작성자 ID:</strong> <span th:text="${board.writer.username}"></span></p>
 	<p><strong>작성자 이름:</strong> <span th:text="${board.writer.name}"></span></p>
-
-
     <br>
+    
     <a href="/mypage">마이페이지로 돌아가기</a>
 </body>
 </html>

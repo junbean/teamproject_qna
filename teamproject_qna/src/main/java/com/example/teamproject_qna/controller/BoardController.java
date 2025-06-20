@@ -1,14 +1,19 @@
 package com.example.teamproject_qna.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.teamproject_qna.entity.BoardEntity;
 import com.example.teamproject_qna.entity.Member;
@@ -38,27 +43,40 @@ public class BoardController {
 
 	// qna 등록 처리
 	@PostMapping("/qnaProc")
-	public String qnaProc(@RequestHeader("Authorization") String authHeader, BoardEntity boardEntity) {
-	    // 1. JWT 토큰에서 유저 이름 추출
+	public String qnaProc(
+	        HttpServletRequest request,
+	        @RequestBody Map<String, String> payload // JSON 객체 받기
+	) {
+	    String category = payload.get("category");
+	    String title = payload.get("title");
+	    String content = payload.get("content");
+
+	    System.out.println("카테고리: " + category);
+	    System.out.println("제목: " + title);
+	    System.out.println("내용: " + content);
+
+	    String authHeader = request.getHeader("Authorization");
 	    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-	        throw new RuntimeException("JWT 토큰이 유효하지 않습니다.");
+	        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "JWT 토큰이 유효하지 않거나 누락되었습니다.");
 	    }
 
-	    String token = authHeader.substring(7); // "Bearer " 이후 잘라내기
+	    String token = authHeader.substring(7);
 	    String username = jwtUtil.getUsername(token);
-
-	    // 2. username으로 Member 객체 조회
 	    Member member = memberRepository.findByUsername(username);
 	    if (member == null) {
-	        throw new RuntimeException("유저 정보를 찾을 수 없습니다.");
+	        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유저를 찾을 수 없습니다.");
 	    }
 
-	    // 3. 게시글 작성자 설정 및 저장
+	    BoardEntity boardEntity = new BoardEntity();
+	    boardEntity.setCategory(category);
+	    boardEntity.setTitle(title);
+	    boardEntity.setContent(content);
 	    boardEntity.setWriter(member);
-	    boardService.boardInsert(boardEntity);
 
+	    boardService.boardInsert(boardEntity);
 	    return "redirect:/mypage";
 	}
+
 	
 	@GetMapping("/mypage")
 	public String myBoardList(HttpServletRequest request, Model model) {
@@ -84,7 +102,7 @@ public class BoardController {
 	}
 	
 	@GetMapping("/board/detail/{id}")
-	public String boardDetail(@PathVariable Long id, Model model) {
+	public String boardDetail(@PathVariable("id") Long id, Model model) {
 	    BoardEntity board = boardService.getBoardById(id);
 	    model.addAttribute("board", board);
 	    return "boardDetail";

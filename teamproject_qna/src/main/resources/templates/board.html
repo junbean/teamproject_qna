@@ -4,42 +4,47 @@
   <meta charset="UTF-8">
   <title>문의 페이지</title>
   <script>
-    function submitForm(event) {
-      event.preventDefault(); // 기본 form 동작 방지
+    async function submitForm(event) {
+      event.preventDefault(); // 기본 제출 막기
 
-      const token = localStorage.getItem("jwtToken"); // 토큰 가져오기 (로컬 스토리지 기준)
-
+      const token = localStorage.getItem("jwtToken");
       if (!token) {
         alert("로그인이 필요합니다.");
         return;
       }
 
-      const form = document.querySelector("form");
+      const form = document.getElementById("qnaForm");
       const formData = new FormData(form);
+      const body = new URLSearchParams();
 
-      fetch("/qnaProc", {
-        method: "POST",
-        headers: {
-          "Authorization": "Bearer " + token
-        },
-        body: new URLSearchParams(formData) // application/x-www-form-urlencoded 형식으로 전송
-      })
-      .then(res => {
-        if (res.redirected) {
-          window.location.href = res.url;
-        } else if (res.status === 401) {
+      for (const [key, value] of formData.entries()) {
+        body.append(key, value);
+      }
+
+      try {
+        const response = await fetch("/qnaProc", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body
+        });
+
+        if (response.redirected) {
+          window.location.href = response.url;
+        } else if (response.status === 401) {
           alert("인증이 만료되었거나 잘못되었습니다.");
-        } else if (res.ok) {
+        } else if (response.ok) {
           alert("문의가 성공적으로 등록되었습니다.");
           window.location.href = "/mypage";
         } else {
-          alert("오류가 발생했습니다.");
+          alert("오류가 발생했습니다. 상태 코드: " + response.status);
         }
-      })
-      .catch(err => {
-        console.error("에러 발생:", err);
-        alert("요청 중 오류가 발생했습니다.");
-      });
+      } catch (err) {
+        console.error("요청 중 에러 발생:", err);
+        alert("서버와 통신 중 문제가 발생했습니다.");
+      }
     }
   </script>
 </head>
@@ -47,7 +52,7 @@
   <h1>문의 페이지</h1>
   <hr>
 
-  <form onsubmit="submitForm(event)">
+  <form id="qnaForm" onsubmit="submitForm(event)">
     <table border="1">
       <thead>
         <tr>
@@ -66,10 +71,7 @@
             </select>
           </td>
           <td><input type="text" name="title" required></td>
-          <td>
-            <!-- textarea로 변경 -->
-            <textarea name="content" rows="4" cols="40" required></textarea>
-          </td>
+          <td><textarea name="content" rows="4" cols="40" required></textarea></td>
         </tr>
         <tr>
           <td colspan="3" align="center">
