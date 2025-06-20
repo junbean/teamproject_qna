@@ -10,11 +10,14 @@ import org.springframework.stereotype.Component;
 
 import com.example.teamproject_qna.dto.UserDTO;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class JWTUtil {
 
     private final SecretKey secretKey;  // 한 번만 생성해서 재사용
@@ -58,27 +61,74 @@ public class JWTUtil {
                 .compact();
     }
     
+    // 토큰에서 Claims 추출 (공통 메서드)
+    private Claims getClaims(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (JwtException e) {
+            log.error("토큰 파싱 실패: {}", e.getMessage());
+            throw new RuntimeException("유효하지 않은 토큰입니다.");
+        }
+    }
+    
+    // 토큰에서 UserDTO 전체 추출
+    public UserDTO getUserFromToken(String token) {
+        Claims claims = getClaims(token);
+        
+        return UserDTO.builder()
+                .mid(claims.get("mid", Long.class))
+                .username(claims.get("username", String.class))
+                .name(claims.get("name", String.class))
+                .role(claims.get("role", String.class))
+                .job(claims.get("job", String.class))
+                .build();
+    }
+    
     // 토큰에서 username 추출
     public String getUsername(String token) {
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("username", String.class);
+        Claims claims = getClaims(token);
+        return claims.get("username", String.class);
+    }
+    
+    // 토큰에서 mid 추출
+    public Long getMid(String token) {
+        Claims claims = getClaims(token);
+        return claims.get("mid", Long.class);
     }
     
     // 토큰 유효성 검사
     public boolean isValid(String token) {
         try {
-            Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parse(token);
+            getClaims(token);
             return true;
-        } catch (JwtException e) {
+        } catch (Exception e) {
+            log.debug("토큰 유효성 검사 실패: {}", e.getMessage());
             return false;
         }
     }
     
+    // 토큰 타입 확인 (ACCESS vs REFRESH)
+    public boolean isAccessToken(String token) {
+        try {
+            Claims claims = getClaims(token);
+            String tokenType = claims.get("tokenType", String.class);
+            return "ACCESS".equals(tokenType);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public boolean isRefreshToken(String token) {
+        try {
+            Claims claims = getClaims(token);
+            String tokenType = claims.get("tokenType", String.class);
+            return "REFRESH".equals(tokenType);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
