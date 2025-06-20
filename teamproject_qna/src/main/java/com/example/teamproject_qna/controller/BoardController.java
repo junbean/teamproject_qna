@@ -72,7 +72,7 @@ public class BoardController {
 	    boardEntity.setTitle(title);
 	    boardEntity.setContent(content);
 	    boardEntity.setWriter(member);
-
+	    boardEntity.setIsAnswered("답변 대기");
 	    boardService.boardInsert(boardEntity);
 	    return "redirect:/mypage";
 	}
@@ -86,7 +86,7 @@ public class BoardController {
 	        throw new RuntimeException("JWT 토큰이 없습니다.");
 	    }
 
-	    String token = authHeader.substring(7); // "Bearer " 이후
+	    String token = authHeader.substring(7); 
 
 	    // 2. JWT 토큰에서 사용자 이름 추출
 	    String username = jwtUtil.getUsername(token);
