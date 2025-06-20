@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>Show Need Answer Detail</h1>
+	<hr>
+	
+	<table border = "1">
+		<thead>
+			<tr>
+				<th>번호</th>
+				<th>제목</th>
+				<th>내용</th>
+				<th>작성자</th>
+				<th>카테고리</th>
+				<th>답변여부</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td th:text="${board.bid}"></td>
+				<td th:text="${board.title}"></td>
+				<td th:text="${board.content}"></td>
+				<td th:text="${board.writer.username}"></td>
+				<td th:text="${board.category}"></td>
+				<td th:text="${board.isAnswered}"></td>
+			</tr>
+		</tbody>
+	</table>
+	<hr>
+	<h3>답변하기</h3>
+	<form action ="/admin/registAnswer" method="POST">
+		<textarea rows="20" cols="40" name="content"></textarea>
+		<input type="hidden" name="writerid" th:value="1" />
+		<input type="hidden" name="bid" th:value="${board.bid}">
+		<input type="submit" value="등록">
+	</form>
+</body>
+</html>

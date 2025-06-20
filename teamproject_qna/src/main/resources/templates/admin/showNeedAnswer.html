@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>Show Need Answer</h1>
+	<hr>
+	
+	<table border = "1">
+		<thead>
+			<tr>
+				<th>번호</th>
+				<th>제목</th>
+				<th>작성자</th>
+				<th>카테고리</th>
+				<th>답변여부</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each=" b : ${bList}">
+				<td th:text="${b.bid}"></td>
+				<td>
+					<a th:text="${b.title}" 
+					   th:href="@{/admin/showDetailQna/{title}(title=${b.title})}">
+					</a>
+				</td>
+				<td th:text="${b.writer.username}"></td>
+				<td th:text="${b.category}"></td>
+				<td th:text="${b.isAnswered}"></td>
+			</tr>
+		</tbody>
+	</table>
+	
+</body>
+</html>
