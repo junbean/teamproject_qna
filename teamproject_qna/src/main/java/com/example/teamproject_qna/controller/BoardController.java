@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -29,29 +30,34 @@ public class BoardController {
 	@Autowired
 	private MemberRepository memberRepository;
 
-	// board 폼 이동
+	// qnaPage 폼 이동
 	@GetMapping("/board")
 	public String board() {
 		return "board";
 	}
 
-	// board 등록 처리
+	// qna 등록 처리
 	@PostMapping("/qnaProc")
 	public String qnaProc(@RequestHeader("Authorization") String authHeader, BoardEntity boardEntity) {
-		// 1. JWT 토큰에서 유저 이름 추출
-		String token = authHeader.replace("Bearer ", "");
-		String username = jwtUtil.getUsername(token);
+	    // 1. JWT 토큰에서 유저 이름 추출
+	    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+	        throw new RuntimeException("JWT 토큰이 유효하지 않습니다.");
+	    }
 
-		// 2. username으로 Member 객체 조회
-		Member member = memberRepository.findByUsername(username);
-		
-		// 3. 게시글 작성자 설정
-		boardEntity.setWriter(member);
+	    String token = authHeader.substring(7); // "Bearer " 이후 잘라내기
+	    String username = jwtUtil.getUsername(token);
 
-		// 3. 게시글 저장
-		boardService.boardInsert(boardEntity);
+	    // 2. username으로 Member 객체 조회
+	    Member member = memberRepository.findByUsername(username);
+	    if (member == null) {
+	        throw new RuntimeException("유저 정보를 찾을 수 없습니다.");
+	    }
 
-		return "redirect:/mypage";
+	    // 3. 게시글 작성자 설정 및 저장
+	    boardEntity.setWriter(member);
+	    boardService.boardInsert(boardEntity);
+
+	    return "redirect:/mypage";
 	}
 	
 	@GetMapping("/mypage")
@@ -76,5 +82,13 @@ public class BoardController {
 	    model.addAttribute("boardList", boardList);
 	    return "mypage";
 	}
+	
+	@GetMapping("/board/detail/{id}")
+	public String boardDetail(@PathVariable Long id, Model model) {
+	    BoardEntity board = boardService.getBoardById(id);
+	    model.addAttribute("board", board);
+	    return "boardDetail";
+	}
+
 
 }

@@ -1,42 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>문의 페이지</title>
+  <meta charset="UTF-8">
+  <title>문의 페이지</title>
+  <script>
+    function submitForm(event) {
+      event.preventDefault(); // 기본 form 동작 방지
+
+      const token = localStorage.getItem("jwtToken"); // 토큰 가져오기 (로컬 스토리지 기준)
+
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
+      }
+
+      const form = document.querySelector("form");
+      const formData = new FormData(form);
+
+      fetch("/qnaProc", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + token
+        },
+        body: new URLSearchParams(formData) // application/x-www-form-urlencoded 형식으로 전송
+      })
+      .then(res => {
+        if (res.redirected) {
+          window.location.href = res.url;
+        } else if (res.status === 401) {
+          alert("인증이 만료되었거나 잘못되었습니다.");
+        } else if (res.ok) {
+          alert("문의가 성공적으로 등록되었습니다.");
+          window.location.href = "/mypage";
+        } else {
+          alert("오류가 발생했습니다.");
+        }
+      })
+      .catch(err => {
+        console.error("에러 발생:", err);
+        alert("요청 중 오류가 발생했습니다.");
+      });
+    }
+  </script>
 </head>
 <body>
-	<h1>문의 페이지</h1>
-	<hr>
+  <h1>문의 페이지</h1>
+  <hr>
 
-	<form action="/qnaProc" method="post">
-		<table border="1">
-			<thead>
-				<tr>
-					<th>카테고리</th>
-					<th>제목</th>
-					<th>내용</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>
-						<select name="category">
-							<option value="예금">예금</option>
-							<option value="대출">대출</option>
-							<option value="카드">카드</option>
-						</select>
-					</td>
-					<td><input type="text" name="title" required></td>
-					<td><input type="text" name="content" required></td>
-				</tr>
-				<tr>
-					<td colspan="3" align="center">
-						<input type="submit" value="제출">
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</form>
-	<a href="/mypage">마이페이지</a>
+  <form onsubmit="submitForm(event)">
+    <table border="1">
+      <thead>
+        <tr>
+          <th>카테고리</th>
+          <th>제목</th>
+          <th>내용</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <select name="category" required>
+              <option value="deposit">예금</option>
+              <option value="loan">대출</option>
+              <option value="card">카드</option>
+            </select>
+          </td>
+          <td><input type="text" name="title" required></td>
+          <td>
+            <!-- textarea로 변경 -->
+            <textarea name="content" rows="4" cols="40" required></textarea>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" align="center">
+            <input type="submit" value="제출">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+
+  <br>
+  <a href="/mypage">마이페이지</a>
 </body>
 </html>

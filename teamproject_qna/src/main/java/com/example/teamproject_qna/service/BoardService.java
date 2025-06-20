@@ -1,5 +1,4 @@
 package com.example.teamproject_qna.service;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +26,11 @@ public class BoardService {
 	public List<BoardEntity> getBoardsByWriter(Member loginUser) {
 		  return boardRepository.findByWriter(loginUser);
 	}
+
+	public BoardEntity getBoardById(Long id) {
+	    return boardRepository.findById(id)
+	        .orElseThrow(() -> new RuntimeException("해당 글을 찾을 수 없습니다."));
+	}
+
 
 }
