@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마이 페이지</title>
+</head>
+<body>
+
+    <h1>마이 페이지</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>글번호</th>
+                <th>제목</th>
+                <th>카테고리</th>
+                <th>작성자 ID</th>
+                <th>작성자 이름</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="board : ${boardList}">
+                <td th:text="${board.bid}"></td>
+                <td th:text="${board.title}"></td>
+                <td th:text="${board.category}"></td>
+                <td th:text="${board.writer.name}"></td> 
+            </tr>
+        </tbody>
+    </table>
+	<a href="/board">문의 페이지</a>
+</body>
+</html>

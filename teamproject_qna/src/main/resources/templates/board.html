@@ -12,22 +12,31 @@
 		<table border="1">
 			<thead>
 				<tr>
+					<th>카테고리</th>
 					<th>제목</th>
 					<th>내용</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td><input type="text" name="title"></td>
-					<td><input type="text" name="content"></td>
+					<td>
+						<select name="category">
+							<option value="예금">예금</option>
+							<option value="대출">대출</option>
+							<option value="카드">카드</option>
+						</select>
+					</td>
+					<td><input type="text" name="title" required></td>
+					<td><input type="text" name="content" required></td>
 				</tr>
 				<tr>
-					<td colspan="2" align="center">
+					<td colspan="3" align="center">
 						<input type="submit" value="제출">
 					</td>
 				</tr>
 			</tbody>
 		</table>
 	</form>
+	<a href="/mypage">마이페이지</a>
 </body>
 </html>
