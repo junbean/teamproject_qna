@@ -21,8 +21,4 @@ public class MainController {
 		return "registForm";
 	}
 	
-	@GetMapping("/mypage")
-	public String myPage() {
-		return "mypage";
-	}
 }
