@@ -15,7 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "board")
+@Table(name = "board98")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,6 +39,10 @@ public class BoardEntity {
 
 	@Column(nullable = false, length = 20)
 	private String category;
+	
+	@Column(nullable = false, length = 20, name="isanswered")
+	private String isAnswered;
+
 
 	
 }

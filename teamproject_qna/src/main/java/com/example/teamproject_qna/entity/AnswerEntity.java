@@ -15,21 +15,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "answer")
+@Table(name = "answer98")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class AnswerEntity {
-	 @Id
+	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long aid;
 	 
-	   @Column(nullable = false, length = 1000)
+	    @Column(nullable = false, length = 1000)
 	    private String content;
 
 	    @ManyToOne(fetch = FetchType.LAZY)
-	    @JoinColumn(name = "writer", nullable = false)
+	    @JoinColumn(name = "writer")
 	    private Member writer;
 
 	    @ManyToOne(fetch = FetchType.LAZY)
