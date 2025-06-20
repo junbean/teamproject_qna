@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<style>
+	table {
+		width: 80%;
+		border-collapse: collapse; /* 테두리 겹침 제거 */
+		margin: 20px 20px 20px 0;
+	}
+	
+	th, td {
+		border: 1px solid #333;
+		padding: 12px;
+		text-align: center;
+	}
+	
+	th {
+		background-color: #f2f2f2;
+	}
+	
+	tr:hover {
+		background-color: #f9f9f9;
+	}
+	
+	caption {
+		caption-side: top;
+		font-weight: bold;
+		font-size: 1.2em;
+		margin-bottom: 10px;
+	}
+	
+	form {
+		margin-top: 20px;
+	}
+	
+	textarea {
+		width: 80%;
+		height: 200px;
+		padding: 10px;
+		font-size: 16px;
+		resize: vertical;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
+	
+	input[type="submit"] {
+		display: block;
+		margin-top: 15px;
+		padding: 10px 20px;
+		background-color: #007BFF;
+		color: white;
+		font-weight: bold;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+	}
+	
+	input[type="submit"]:hover {
+		background-color: #0056b3;
+	}
+	</style>
+</head>
+<body>
+	<div th:replace="fragments/menu :: sidebar"></div>
+	<div style="margin-left: 220px; padding: 20px;">
+
+		<h1>Show Need Answer Detail</h1>
+		<hr>
+
+		<table border="1">
+			<thead>
+				<tr>
+					<th>번호</th>
+					<th>제목</th>
+					<th>내용</th>
+					<th>작성자</th>
+					<th>카테고리</th>
+					<th>답변여부</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td th:text="${board.bid}"></td>
+					<td th:text="${board.title}"></td>
+					<td th:text="${board.content}"></td>
+					<td th:text="${board.writer.username}"></td>
+					<td th:text="${board.category}"></td>
+					<td th:text="${board.isAnswered}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<hr>
+		<h3>답변하기</h3>
+		<form action="/admin/registAnswer" method="POST">
+			<textarea rows="20" cols="40" name="content"></textarea>
+			<input type="hidden" name="writerid" th:value="1" /> <input
+				type="hidden" name="bid" th:value="${board.bid}"> <input
+				type="submit" value="등록">
+		</form>
+	</div>
+</body>
+</html>
