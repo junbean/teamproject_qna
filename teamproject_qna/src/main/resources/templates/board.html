@@ -7,7 +7,8 @@
     async function submitForm(event) {
       event.preventDefault(); // 기본 제출 막기
 
-      const token = localStorage.getItem("jwtToken");
+      // ✅ accessToken으로 변경
+      const token = localStorage.getItem("accessToken");
       if (!token) {
         alert("로그인이 필요합니다.");
         return;
@@ -32,6 +33,7 @@
         });
 
         if (response.redirected) {
+          // 리다이렉트가 있으면 해당 위치로 이동
           window.location.href = response.url;
         } else if (response.status === 401) {
           alert("인증이 만료되었거나 잘못되었습니다.");
@@ -65,9 +67,9 @@
         <tr>
           <td>
             <select name="category" required>
-              <option value="deposit">예금</option>
-              <option value="loan">대출</option>
-              <option value="card">카드</option>
+              <option value="예금">예금</option>
+              <option value="대출">대출</option>
+              <option value="카드">카드</option>
             </select>
           </td>
           <td><input type="text" name="title" required></td>
