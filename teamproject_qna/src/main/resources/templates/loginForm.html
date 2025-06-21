@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <title>로그인</title>
+	</head>
+	<body>	
+		<h1>로그인</h1>
+    
+    	<div id="message" style="color: red; margin-bottom: 15px;"></div>
+    
+	    <form id="loginForm">
+	        <div>
+	            <label>아이디:</label>
+	            <input type="text" id="username" required>
+	        </div>
+	        <br>
+	        <div>
+	            <label>비밀번호:</label>
+	            <input type="password" id="password" required>
+	        </div>
+	        <br>
+	        <button type="submit">로그인</button>
+	    </form>
+	    
+	    <br>
+	    <a href="/regist">회원가입</a>
+	    
+	    <script>
+		    document.getElementById('loginForm').addEventListener('submit', function(e) {
+	            e.preventDefault();
+	            
+	            const username = document.getElementById('username').value;
+	            const password = document.getElementById('password').value;
+	            
+	            fetch('/api/auth/login', {
+	                method: 'POST',
+	                headers: {
+	                    'Content-Type': 'application/json'
+	                },
+	                body: JSON.stringify({
+	                    username: username,
+	                    password: password
+	                })
+	            })
+	            .then(response => response.json())
+	            .then(data => {
+	                if (data.accessToken) {
+	                    // 로그인 성공
+	                    localStorage.setItem('accessToken', data.accessToken);
+	                    localStorage.setItem('refreshToken', data.refreshToken);
+	                    window.location.href = '/mypage';
+	                } else {
+	                    // 로그인 실패
+	                    document.getElementById('message').textContent = '로그인에 실패했습니다.';
+	                }
+	            })
+	            .catch(error => {
+	                document.getElementById('message').textContent = '로그인에 실패했습니다.';
+	            });
+	        });
+	    </script>
+	</body>
+</html>

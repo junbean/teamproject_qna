@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>마이 페이지</title>
+    </head>
+    <body>
+        <h1>마이 페이지</h1>
+        <h3>내가 등록한 문의 내역</h3>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>글번호</th>
+                    <th>제목</th>
+                    <th>카테고리</th>
+                    <th>작성자 ID</th>
+                    <th>작성자 이름</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="board : ${boardList}">
+                    <td th:text="${board.bid}"></td>
+                    <td>
+                        <a
+                            th:href="@{/board/detail/{id}(id=${board.bid})}"
+                            th:text="${board.title}"
+                        ></a>
+                    </td>
+                    <td th:text="${board.category}"></td>
+                    <td th:text="${board.writer.username}"></td>
+                    <td th:text="${board.writer.name}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br />
+        <a href="/board">문의 페이지</a>
+    </body>
+</html>
