@@ -1,40 +1,66 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8" />
-        <title>마이 페이지</title>
-    </head>
-    <body>
-        <h1>마이 페이지</h1>
-        <h3>내가 등록한 문의 내역</h3>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>마이 페이지</title>
+  </head>
+  <body>
+    <h1>마이 페이지</h1>
+    <h3>내가 등록한 문의 내역</h3>
 
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>글번호</th>
-                    <th>제목</th>
-                    <th>카테고리</th>
-                    <th>작성자 ID</th>
-                    <th>작성자 이름</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="board : ${boardList}">
-                    <td th:text="${board.bid}"></td>
-                    <td>
-                        <a
-                            th:href="@{/board/detail/{id}(id=${board.bid})}"
-                            th:text="${board.title}"
-                        ></a>
-                    </td>
-                    <td th:text="${board.category}"></td>
-                    <td th:text="${board.writer.username}"></td>
-                    <td th:text="${board.writer.name}"></td>
-                </tr>
-            </tbody>
-        </table>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>글번호</th>
+          <th>제목</th>
+          <th>카테고리</th>
+          <th>작성자 ID</th>
+          <th>작성자 이름</th>
+        </tr>
+      </thead>
+      <tbody id="boardTableBody">
+        <!-- JS에서 동적으로 삽입 -->
+      </tbody>
+    </table>
 
-        <br />
-        <a href="/board">문의 페이지</a>
-    </body>
+    <br />
+    <a href="/board">문의 페이지</a>
+
+    <script>
+      const accessToken = localStorage.getItem("accessToken");
+
+      fetch("/api/mypage", {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("인증 실패");
+          return res.json();
+        })
+        .then((data) => {
+          const tbody = document.getElementById("boardTableBody");
+          tbody.innerHTML = ""; // 기존 내용 초기화
+
+          data.forEach((board) => {
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+              <td>${board.id}</td>
+              <td><a href="/board/detail/${board.id}">${board.title}</a></td>
+              <td>${board.category}</td>
+              <td>${board.username}</td>
+              <td>${board.name}</td>
+            `;
+
+            tbody.appendChild(tr);
+          });
+        })
+        .catch((err) => {
+          alert("로그인이 필요합니다.");
+          window.location.href = "/";
+        });
+    </script>
+  </body>
 </html>
